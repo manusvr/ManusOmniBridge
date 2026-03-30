@@ -1,0 +1,52 @@
+# Retargeting Configuration for Manus to OmniHand
+# Based on Wuji retargeting approach
+
+retarget:
+  # Huber loss parameters (cm)
+  huber_delta: 2.0
+  huber_delta_dir: 0.5
+  
+  # Loss weights
+  w_pos: 1.0          # Tip position error weight
+  w_dir: 10.0         # Tip direction error weight
+  w_full_hand: 1.0    # Full hand vector weight
+  
+  # Regularization (smooths joint angle changes)
+  norm_delta: 0.04
+  
+  # Global scaling factor for hand size
+  scaling: 1.0
+  
+  # Low-pass filter alpha (0-1, lower = smoother)
+  lp_alpha: 0.2
+
+# Pinch detection thresholds (cm)
+# When thumb is close to finger, switch to precision grip mode
+pinch_thresholds:
+  index:
+    d1: 2.0    # Start blending to precision grip
+    d2: 4.0    # Full precision grip
+  middle:
+    d1: 2.0
+    d2: 4.0
+  ring:
+    d1: 2.0
+    d2: 4.0
+  pinky:
+    d1: 2.0
+    d2: 4.0
+
+# Per-finger segment scaling (relative to hand size)
+# Format: [MCP_scale, PIP_scale, DIP_scale, TIP_scale]
+segment_scaling:
+  thumb: [1.0, 1.0, 1.0, 1.0]
+  index: [1.0, 1.0, 1.0, 1.0]
+  middle: [1.0, 1.0, 1.0, 1.0]
+  ring: [1.0, 1.0, 1.0, 1.0]
+  pinky: [1.0, 1.0, 1.0, 1.0]
+
+# Optimization parameters
+optimizer:
+  max_iterations: 50
+  tolerance: 0.0001
+  algorithm: LD_SLSQP
