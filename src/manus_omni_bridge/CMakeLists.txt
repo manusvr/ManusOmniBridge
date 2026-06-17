@@ -16,7 +16,10 @@ find_package(visualization_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(pinocchio REQUIRED)
-find_package(NLopt REQUIRED)
+
+# Use PkgConfig to find NLopt correctly on Ubuntu
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(NLOPT REQUIRED nlopt)
 
 # ROS 2 Message Dependencies
 find_package(manus_ros2_msgs REQUIRED)
@@ -24,8 +27,8 @@ find_package(sensor_msgs REQUIRED)
 find_package(omnihand_2025_node_msgs REQUIRED)
 find_package(omnihand_pro_2025_node_msgs REQUIRED)
 
-add_executable(bridge_node 
-    src/manus_bridge_node.cpp 
+add_executable(bridge_node
+    src/manus_bridge_node.cpp
     src/manusOmni.cpp
     src/manusOmniPro.cpp
     src/ManusUniversalPose.cpp
@@ -37,14 +40,15 @@ target_include_directories(bridge_node PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     ${EIGEN3_INCLUDE_DIRS}
     ${PINOCCHIO_INCLUDE_DIRS}
+    ${NLOPT_INCLUDE_DIRS}  # Added NLopt include directories
     "/opt/ros/humble/include/pinocchio"
 )
 
 # Explicitly link external (non-ROS) libraries
-target_link_libraries(bridge_node 
+target_link_libraries(bridge_node
     Eigen3::Eigen
     ${pinocchio_LIBRARIES}
-    NLopt::nlopt
+    ${NLOPT_LIBRARIES}     # Updated to use PkgConfig variables
 )
 
 # Use Ament for ROS-specific dependencies
