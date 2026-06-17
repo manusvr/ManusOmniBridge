@@ -28,7 +28,7 @@ This workspace contains:
 * **ROS 2** (Tested on Humble)
 * **Eigen3** (Math fundamentals)
 * **Pinocchio** (`ros-<distro>-pinocchio` or compiled from source)
-* **NLopt** (`libnlopt-dev` - Non-linear optimization library)
+* **NLopt** (`libnlopt-dev` `libnlopt-cxx-dev`- Non-linear optimization library)
 * **Manus Core** running on your Windows/Linux machine (make sure the glove is connected and calibrated in Manus Core).
 
 ---
