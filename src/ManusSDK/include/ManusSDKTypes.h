@@ -17,17 +17,12 @@ extern "C"
 /// the number, and to make changing the number easier and safer.
 #define NUM_FINGERS_ON_HAND 5
 
-/// @brief Used to descriptively refer to the number of flex sensor segments.
-/// Used with arrays and loops to make them more descriptive than simply using
-/// the number, and to make changing the number easier and safer.
-#define NUM_FLEX_SEGMENTS_PER_FINGER 2
-
 /// @brief Used to descriptively refer to the maximum IMUs count on a glove.
 /// Used with arrays and loops to make them more descriptive than simply using
 /// the number, and to make changing the number easier and safer.
 #define MAX_NUM_IMUS_ON_GLOVE (NUM_FINGERS_ON_HAND + 1)
 
-/// @brief Used to descriptively refer to the maximum number of Polygon users.
+/// @brief Used to descriptively refer to the maximum number of users.
 /// Used with arrays and loops to make them more descriptive than simply using
 /// the number, and to make changing the number easier and safer.
 #define MAX_USERS 16 // we should never reach that
@@ -36,11 +31,6 @@ extern "C"
 /// Used with arrays to make them more descriptive than simply using the
 /// number, and to make changing the number easier and safer.
 #define MAX_NUM_CHARS_IN_USERNAME 64
-
-/// @brief Used to descriptively refer to the maximum body measurement name length.
-/// Used with arrays to make them more descriptive than simply using the
-/// number, and to make changing the number easier and safer.
-#define MAX_NUM_CHARS_IN_MEASUREMENT 64
 
 /// Host name length is based on a post made here:
 /// https://community.cisco.com/t5/other-network-architecture/maximum-length-hostname/td-p/529327
@@ -60,22 +50,47 @@ extern "C"
 /// @brief Used to descriptively refer to the maximum tracker name length.
 /// Used with arrays to make them more descriptive than simply using the
 /// number, and to make changing the number easier and safer.
-#define MAX_NUM_CHARS_IN_TRACKER_ID 32
+#define MAX_NUM_CHARS_IN_TRACKER_ID 256
 
 /// @brief Used to descriptively refer to the maximum tracker manufacturer length.
 /// Used with arrays to make them more descriptive than simply using the
 /// number, and to make changing the number easier and safer.
-#define MAX_NUM_CHARS_IN_TRACKER_MANUFACTURER 32
+#define MAX_NUM_CHARS_IN_TRACKER_MANUFACTURER 256
 
 /// @brief Used to descriptively refer to the maximum tracker manufacturer length.
 /// Used with arrays to make them more descriptive than simply using the
 /// number, and to make changing the number easier and safer.
-#define MAX_NUM_CHARS_IN_TRACKER_PRODUCTNAME 32
+#define MAX_NUM_CHARS_IN_TRACKER_PRODUCTNAME 256
+
+/// @brief Used to descriptively refer to the maximum number of settings in one tracker system.
+/// Used with arrays to make them more descriptive than simply using the
+/// number, and to make changing the number easier and safer.
+#define MAX_NUM_SETTINGS_IN_TRACKERS 4
+
+/// @brief Used to descriptively refer to the maximum number of tracker systems.
+/// Used with arrays to make them more descriptive than simply using the
+/// number, and to make changing the number easier and safer.
+#define MAX_NUM_TRACKER_SYSTEMS 6
+
+/// @brief Used to descriptively refer to the maximum tracker system name length.
+/// Used with arrays to make them more descriptive than simply using the
+/// number, and to make changing the number easier and safer.
+#define MAX_NUM_CHARS_IN_TRACKERSYSTEM 64
+
+/// @brief Used to descriptively refer to the maximum length for tracker system file settings.
+/// Used with arrays to make them more descriptive than simply using the
+/// number, and to make changing the number easier and safer.
+#define MAX_NUM_CHARS_IN_TRACKERSYSTEM_FILE_PATH 256
+
+/// @brief Used to descriptively refer to the maximum length for tracker system file extensions.
+/// Used with arrays to make them more descriptive than simply using the
+/// number, and to make changing the number easier and safer.
+#define MAX_NUM_CHARS_IN_TRACKERSYSTEM_FILE_EXTENSION 16
 
 /// @brief Used to descriptively refer to the maximum target name length.
 /// Used with arrays to make them more descriptive than simply using the
 /// number, and to make changing the number easier and safer.
-#define MAX_NUM_CHARS_IN_TARGET_ID 32
+#define MAX_NUM_CHARS_IN_TARGET_ID 256
 
 /// @brief Used to descriptively refer to the maximum version string length.
 /// Used with arrays to make them more descriptive than simply using the
@@ -124,15 +139,10 @@ extern "C"
 /// the number, and to make changing the number easier and safer.
 #define MAX_NUMBER_OF_USERS  MAX_USERS
 
-/// @brief Constants for the maximum number of trackers for each polygon skeleton.
-/// Used with arrays and loops to make them more descriptive than simply using
-/// the number, and to make changing the number easier and safer.
-#define NUMBER_OF_TRACKERS_PER_POLYGON_SKELETON 8
-
 /// @brief Constants for the maximum number of trackers.
 /// Used with arrays and loops to make them more descriptive than simply using
 /// the number, and to make changing the number easier and safer.
-#define MAX_NUMBER_OF_TRACKERS (MAX_NUMBER_OF_USERS * NUMBER_OF_TRACKERS_PER_POLYGON_SKELETON)
+#define MAX_NUMBER_OF_TRACKERS 128 // sizes TrackerLandscape and is a documented public bound
 
 /// @brief Used to descriptively refer to the maximum node name length.
 /// Used with arrays to make them more descriptive than simply using the
@@ -208,11 +218,11 @@ extern "C"
 /// @brief Used to define the max amount of net devices
 #define MAX_NUMBER_OF_NETDEVICES  MAX_NUMBER_OF_DONGLES
 
-/// @brief Used to define the max amount of chars allowed in a license
-#define MAX_NUM_CHARS_IN_LICENSE 299
+/// @brief Used to define the max amount of chars allowed in a license.
+#define MAX_NUM_CHARS_IN_LICENSE 4096
 
-/// @brief Used to define the max amount of chars allowed in a command response
-#define MAX_NUM_CHARS_IN_RESPONSE 256
+/// @brief Used to define the max amount of chars allowed in a command message
+#define MAX_NUM_CHARS_IN_MESSAGE 256
 
 /// @brief Matchmaker requirements.
 #define BROADCAST_ADDRESS "255.255.255.255"
@@ -274,7 +284,7 @@ typedef enum SDKReturnCode
 	/// memory unallocated or just a null pointer passed where it wasn't supposed to be!
 	SDKReturnCode_NullPointer,
 
-	/// null sequence type for polygon calibration
+	/// null sequence type for a calibration sequence
 	SDKReturnCode_InvalidSequence,
 
 	/// don't forget to set the coordinate system type or there will be trouble
@@ -295,7 +305,7 @@ typedef enum SDKReturnCode
 	SDKReturnCode_MAX_SIZE
 } SDKReturnCode;
 
-/// @brief Used to tell what severity the log is
+/// @brief Used to specify the severity of the entry log
 typedef enum LogSeverity
 {
 	LogSeverity_Debug,
@@ -303,6 +313,16 @@ typedef enum LogSeverity
 	LogSeverity_Warn,
 	LogSeverity_Error
 } LogSeverity;
+
+/// @brief Used to configure the verbosity of a certain log output
+typedef enum LogVerbosity
+{
+	LogVerbosity_Debug,
+	LogVerbosity_Info,
+	LogVerbosity_Warn,
+	LogVerbosity_Error,
+	LogVerbosity_None
+} LogVerbosity;
 
 
 /// @brief Used to tell what client is using the wrapper.
@@ -341,19 +361,38 @@ typedef enum TrackingQuality
 	TrackingQuality_Untrackable,
 	TrackingQuality_BadTracking,
 	TrackingQuality_Trackable,
-} TrackerQuality;
+} TrackingQuality;
 
 /// @brief Describes the different types of tracker systems.
 typedef enum TrackerSystemType
 {
-	TrackerSystemType_Unknown,
-	TrackerSystemType_Antilatency,
-	TrackerSystemType_ART,
-	TrackerSystemType_OpenVR,
-	TrackerSystemType_Optitrack,
-	TrackerSystemType_Vicon,
-	TrackerSystemType_OpenXR,
+	TrackerSystemType_Unknown = 0,
+	// 1 was Antilatency; the values stay fixed so the bindings keep theirs.
+	TrackerSystemType_ART = 2,
+	TrackerSystemType_OpenVR = 3,
+	TrackerSystemType_Optitrack = 4,
+	TrackerSystemType_Vicon = 5,
+	TrackerSystemType_OpenXR = 6,
+	//TODO should this include OSC?
 } TrackerSystemType;
+
+typedef enum TrackerSystemSettingType
+{
+	TrackerSystemSettingType_Undefined,
+	TrackerSystemSettingType_SettingInt,
+	TrackerSystemSettingType_SettingFile,
+	TrackerSystemSettingType_SettingBool,
+	TrackerSystemSettingType_SettingIp,
+
+	TrackerSystemSettingType_MAX_SIZE
+} TrackerSystemSettingType;
+
+typedef enum TrackedPoint
+{
+	TrackedPoint_Unknown,
+	TrackedPoint_Casing,
+	TrackedPoint_Joint
+} TrackedPoint;
 
 /// @brief Describes the paired state of the device.
 typedef enum DevicePairedState
@@ -376,25 +415,18 @@ typedef enum DeviceClassType
 /// @brief Describes the different types of Manus devices. 
 typedef enum DeviceFamilyType
 {
-	DeviceFamilyType_Unknown,
-	DeviceFamilyType_Prime1,
-	DeviceFamilyType_Prime2,
-	DeviceFamilyType_PrimeX,
-	DeviceFamilyType_Metaglove,
-	DeviceFamilyType_Prime3,
-	DeviceFamilyType_Virtual,
-	DeviceFamilyType_MetaglovePro,
-	DeviceFamilyType_MetagloveProPrecision,
+	DeviceFamilyType_Unknown = 0,
+	DeviceFamilyType_Prime1 = 1, // licence-key dongle only; Prime 1 gloves are not supported
+	DeviceFamilyType_Metaglove = 4,
+	DeviceFamilyType_Virtual = 6,
+	DeviceFamilyType_MetaglovePro = 7,
+	DeviceFamilyType_MetagloveProPrecision = 8,
+	DeviceFamilyType_MetagloveProHaptics = 9,
+	DeviceFamilyType_MetagloveProPrecisionHaptics = 10,
+	DeviceFamilyType_MetagloveAir = 11,
+	DeviceFamilyType_MetagloveAirHaptic = 12,
+	DeviceFamilyType_MetagloveTopModule = 13
 } DeviceFamilyType;
-
-/// @brief Describes the different types of profile used during the calibration.
-typedef enum ProfileType
-{
-	ProfileType_Hands,
-	ProfileType_FullBody,
-
-	ProfileType_MAX_SIZE
-} ProfileType;
 
 typedef enum GloveProfileType
 {
@@ -403,86 +435,18 @@ typedef enum GloveProfileType
 	GloveProfileType_MetaglovePro,
 } GloveProfileType;
 
-/// @brief The different types of body measurements used for the polygon calibration.
-typedef enum MeasurementType
-{
-	MeasurementType_Unknown,
-	MeasurementType_PlayerHeight,
-	MeasurementType_SpineLength,
-	MeasurementType_NeckLength,
-	MeasurementType_UpperArmLength,
-	MeasurementType_LowerArmLength,
-	MeasurementType_ArmLength,
-	MeasurementType_ArmSpan,
-	MeasurementType_UpperLegLength,
-	MeasurementType_LowerLegLength,
-	MeasurementType_LegLength,
-	MeasurementType_HandLength,
-	MeasurementType_FootLength,
-	MeasurementType_HipWidth,
-	MeasurementType_ShoulderWidth,
-	MeasurementType_ShoulderHeight,
-	MeasurementType_HeadLength,
-	MeasurementType_Thickness,
-	MeasurementType_ArmRatio,
-	MeasurementType_LegRatio,
-
-	MeasurementType_MAX_SIZE // Warning, this value is used to define the UserProfile.Measurement[SIZE]
-} MeasurementType;
-
 /// @brief Describes the different types of tracker offsets.
 typedef enum TrackerOffsetType
 {
-	TrackerOffsetType_Unknown,
-	TrackerOffsetType_HeadTrackerToHead,
-	TrackerOffsetType_HeadTrackerToTopOfHead,
+	// The values stay fixed for the C#/Python/Java bindings and the trackerOffsets arrays they index.
+	TrackerOffsetType_Unknown = 0,
+	TrackerOffsetType_LeftHandTrackerToWrist = 3,
+	TrackerOffsetType_RightHandTrackerToWrist = 4,
+	TrackerOffsetType_LeftHandTrackerToCasing = 14,
+	TrackerOffsetType_RightHandTrackerToCasing = 15,
 
-	TrackerOffsetType_LeftHandTrackerToWrist,
-	TrackerOffsetType_RightHandTrackerToWrist,
-	TrackerOffsetType_LeftFootTrackerToAnkle,
-	TrackerOffsetType_RightFootTrackerToAnkle,
-
-	TrackerOffsetType_HipTrackerToHip,
-	TrackerOffsetType_HipTrackerToLeftLeg,
-	TrackerOffsetType_HipTrackerToRightLeg,
-
-	TrackerOffsetType_LeftUpperArmTrackerToElbow,
-	TrackerOffsetType_RightUpperArmTrackerToElbow,
-	TrackerOffsetType_LeftUpperArmTrackerToShoulder,
-	TrackerOffsetType_RightUpperArmTrackerToShoulder,
-
-	TrackerOffsetType_LeftHandTrackerToCasing,
-	TrackerOffsetType_RightHandTrackerToCasing,
-
-	TrackerOffsetType_MAX_SIZE // Warning, this value is used to define the UserProfile.TrackerOffset[SIZE]
+	TrackerOffsetType_MAX_SIZE = 16 // Warning, this value is used to define the UserProfile.TrackerOffset[SIZE]
 } TrackerOffsetType;
-
-/// @brief Describes the different types of extra tracker offsets.
-typedef enum ExtraTrackerOffsetType
-{
-	ExtraTrackerOffsetType_Unknown,
-	ExtraTrackerOffsetType_HeadForward,
-	ExtraTrackerOffsetType_HipForward,
-	ExtraTrackerOffsetType_HipHeight,
-	ExtraTrackerOffsetType_MAX_SIZE // Warning, this value is used to define the UserProfile.TrackerOffset[SIZE]
-} ExtraTrackerOffsetType;
-
-/// @brief Describes the different types of body measurement units. 
-typedef enum MeasurementUnit
-{
-	MeasurementUnit_Meters,
-	MeasurementUnit_Percentage,
-} MeasurementUnit;
-
-/// @brief Describes the different types of body measurement categories used for the polygon calibration.
-typedef enum MeasurementCategory
-{
-	MeasurementCategory_Misc,
-	MeasurementCategory_Generic,
-	MeasurementCategory_Arms,
-	MeasurementCategory_Legs,
-	MeasurementCategory_Body,
-} MeasurementCategory;
 
 /// @brief Describes the different possibilities for the update status. 
 typedef enum UpdateStatusEnum
@@ -496,6 +460,8 @@ typedef enum UpdateStatusEnum
 	UpdateStatusEnum_UpdatingFirmware,
 	UpdateStatusEnum_UpdatingFinalizing,
 	UpdateStatusEnum_UpdatingFailed,
+	UpdateStatusEnum_UpdatingRestartRequired,
+	UpdateStatusEnum_UpdatingTimedOut,
 } UpdateStatusEnum;
 
 /// @brief Describes the different skeleton types. 
@@ -667,7 +633,15 @@ typedef enum SystemMessageType
 	SystemMessageType_LaunchDevTools,
 
 	SystemMessageType_MaxSeatMixing,
-	SystemMessageType_DeprecatedLicense
+	SystemMessageType_DeprecatedLicense, // a dongle carries an unsigned license, which this build refuses; the message says how to renew it
+
+	SystemMessageType_LicenseSupportExpired,
+
+	SystemMessageType_NetSeatsExhausted, // the connected Core is licensed but no network seat is free for this client
+
+	SystemMessageType_TimecodeFreewheeling, // the timecode source went quiet; Core keeps time on its own clock
+	SystemMessageType_TimecodeSourceRestored, // the timecode source is back after freewheeling
+	SystemMessageType_UnsupportedDevice // a Prime-series glove or dongle; MANUS Core 3.x supports them
 
 } SystemMessageType;
 
@@ -676,10 +650,10 @@ typedef enum ErgonomicsDataType
 {
 //	ErgonomicsDataType_Invalid,
 
-	ErgonomicsDataType_LeftFingerThumbMCPSpread,
+	ErgonomicsDataType_LeftFingerThumbCMCSpread,
+	ErgonomicsDataType_LeftFingerThumbCMCStretch,
 	ErgonomicsDataType_LeftFingerThumbMCPStretch,
-	ErgonomicsDataType_LeftFingerThumbPIPStretch,
-	ErgonomicsDataType_LeftFingerThumbDIPStretch,
+	ErgonomicsDataType_LeftFingerThumbIPStretch,
 
 	ErgonomicsDataType_LeftFingerIndexMCPSpread,
 	ErgonomicsDataType_LeftFingerIndexMCPStretch,
@@ -702,10 +676,10 @@ typedef enum ErgonomicsDataType
 	ErgonomicsDataType_LeftFingerPinkyDIPStretch,
 
 
-	ErgonomicsDataType_RightFingerThumbMCPSpread,
+	ErgonomicsDataType_RightFingerThumbCMCSpread,
+	ErgonomicsDataType_RightFingerThumbCMCStretch,
 	ErgonomicsDataType_RightFingerThumbMCPStretch,
-	ErgonomicsDataType_RightFingerThumbPIPStretch,
-	ErgonomicsDataType_RightFingerThumbDIPStretch,
+	ErgonomicsDataType_RightFingerThumbIPStretch,
 
 	ErgonomicsDataType_RightFingerIndexMCPSpread,
 	ErgonomicsDataType_RightFingerIndexMCPStretch,
@@ -733,24 +707,58 @@ typedef enum ErgonomicsDataType
 /// @brief Describes the possible Manus license types.
 typedef enum LicenseType
 {
-	LicenseType_Undefined,
-	LicenseType_Polygon,
-	LicenseType_CoreXO,
-	LicenseType_CorePro,
-	LicenseType_CoreXOPro,
+	LicenseType_Undefined = 0,
+	LicenseType_Polygon = 1,
+	LicenseType_CoreXO = 2,
+	LicenseType_CorePro = 3,
+	LicenseType_CoreXOPro = 4,
 
-	LicenseType_CoreX,
-	LicenseType_CoreO,
-	LicenseType_CoreQ,
-	LicenseType_CoreXPro,
-	LicenseType_CoreOPro,
-	LicenseType_CoreQPro,
-	LicenseType_CoreXOQPro,
-	LicenseType_CoreXR,
-	LicenseType_CorePrimeThree,
-	LicenseType_Feature,
+	LicenseType_CoreX = 5,
+	LicenseType_CoreO = 6,
+	LicenseType_CoreQ = 7,
+	LicenseType_CoreXPro = 8,
+	LicenseType_CoreOPro = 9,
+	LicenseType_CoreQPro = 10,
+	LicenseType_CoreXOQPro = 11,
+	LicenseType_CoreXR = 12,
+	LicenseType_Feature = 14
 
 } LicenseType;
+
+/// @brief License term / subscription model (orthogonal to the LicenseType SKU above).
+/// Recurring blocks at the end date; Perpetual never expires (keeps running, stops getting updates).
+typedef enum LicenseTermType
+{
+	LicenseTermType_Unknown,
+	LicenseTermType_Recurring,
+	LicenseTermType_Perpetual,
+
+} LicenseTermType;
+
+/// @brief Validity of a dongle's license as evaluated by the Core build reporting it. Lets clients
+/// distinguish a Perpetual license frozen for this (too new) build from plain expiry or corruption.
+typedef enum LicenseStatus
+{
+	LicenseStatus_Unknown,			// no license present / not read yet
+	LicenseStatus_Valid,
+	LicenseStatus_Invalid,			// key or signature did not verify
+	LicenseStatus_Expired,			// past its end date (or not yet valid)
+	LicenseStatus_SupportExpired,	// Perpetual: this build was released after the support window; renew or use an older release
+	LicenseStatus_Unsigned,			// a legacy license without a signature, which this build refuses; renew it with RetrieveLicense, or through MANUS support when offline
+
+} LicenseStatus;
+
+/// @brief Whether this Core holds one of a connected host's network seats (License NSeat).
+/// A host (Core/bodypack) shares its license with at most NSeat concurrent network clients;
+/// every client still receives device data, but only seat holders receive the license.
+typedef enum NetSeatState
+{
+	NetSeatState_Unknown,			// no info yet, or the host predates seat reporting
+	NetSeatState_SeatGranted,		// we hold a seat: the host's license applies here
+	NetSeatState_AllSeatsTaken,		// host is licensed but no seat is free (total 0 = license has no seats)
+	NetSeatState_HostUnlicensed,	// the host has no valid license to hand out
+
+} NetSeatState;
 
 /// @brief The possible FPS rates
 typedef enum TimecodeFPS
@@ -768,6 +776,16 @@ typedef enum TimecodeFPS
 	TimecodeFPS_29_97DF,
 	TimecodeFPS_59_94DF,
 } TimecodeFPS;
+
+/// @brief The state of Core's timecode clock. Core keeps timecode on its own clock, corrected by the timecode
+/// source; when the source goes quiet the clock keeps running on its own (freewheels) instead of stopping.
+typedef enum TimecodeClockState
+{
+	TimecodeClockState_NoSignal, // no source; there is no timecode
+	TimecodeClockState_Acquiring, // a source just started; the clock is locking on to it
+	TimecodeClockState_Locked, // following the source
+	TimecodeClockState_Freewheeling, // the source went quiet; the clock keeps time on its own
+} TimecodeClockState;
 
 typedef enum FingerJointType
 {
@@ -791,6 +809,15 @@ typedef enum SetGloveCalibrationReturnCode
 
 	SetGloveCalibrationReturnCode_MAX_SIZE
 } SetGloveCalibrationReturnCode;
+
+typedef enum MessageType
+{
+	MessageType_Unknown,
+	MessageType_Info,
+	MessageType_Success,
+	MessageType_Warning,
+	MessageType_Error
+} MessageType;
 
 /******************************************************************************
  * Structs.
@@ -898,6 +925,21 @@ typedef struct ManusHost
 	Version manusCoreVersion;
 } ManusHost;
 
+/// @brief Stores a message from the backend. 
+typedef struct Message
+{
+	MessageType type;
+	char message[MAX_NUM_CHARS_IN_MESSAGE];
+} Message;
+
+
+/// @brief Stores the reponse information for calls to the backend. 
+typedef struct Response
+{
+	bool result;
+	Message message;
+} Response;
+
 /******************************************************************************
  * Tracking
  *****************************************************************************/
@@ -907,7 +949,7 @@ typedef struct ManusHost
 /// @brief Stores the name of a tracker.
 typedef struct TrackerId
 {
-	char id[MAX_NUM_CHARS_IN_TRACKER_ID]; // todo. make this UTF8 compliant ?
+	char id[MAX_NUM_CHARS_IN_TRACKER_ID]; // this is for a UTF8 string , NOT an ASCII CHAR array (same base type though)
 } TrackerId;
 
 /// @brief Stores all the tracker data that can be sent or received.
@@ -926,6 +968,8 @@ typedef struct TrackerData
 	ManusVec3 position;
 
 	TrackingQuality quality; //default = TrackingQuality::TrackingQuality_Untrackable;
+
+	TrackedPoint trackedPoint;
 } TrackerData;
 
 
@@ -935,6 +979,56 @@ typedef struct TrackerStreamInfo
 	ManusTimestamp publishTime; //default = 0;	//	DateTime.UtcNow.
 	uint32_t trackerCount; //default = 0;
 } TrackerStreamInfo;
+
+typedef struct TrackingSystemInfo
+{
+	char name[MAX_NUM_CHARS_IN_TRACKERSYSTEM];
+	char description[MAX_NUM_CHARS_IN_TRACKERSYSTEM];
+} TrackingSystemInfo;
+
+typedef struct TrackerSystemSettingBool
+{
+	bool value; //default = false;
+} TrackerSystemSettingBool;
+
+
+typedef struct TrackerSystemSettingFile
+{
+	char value[MAX_NUM_CHARS_IN_TRACKERSYSTEM_FILE_PATH];
+	char extension[MAX_NUM_CHARS_IN_TRACKERSYSTEM_FILE_EXTENSION];
+} TrackerSystemSettingFile;
+
+typedef struct TrackerSystemSettingInt
+{
+	int32_t value; //default = 0;
+	int32_t min; //default = 0;
+	int32_t max; //default = 0;
+} TrackerSystemSettingInt;
+
+typedef struct TrackerSystemSettingIp
+{
+	char value[MAX_NUM_CHARS_IN_IP_ADDRESS];
+} TrackerSystemSettingIp;
+
+typedef struct TrackerSystemSetting
+{
+	char id[MAX_NUM_CHARS_IN_TRACKERSYSTEM];
+
+	TrackerSystemSettingInt settingInt;
+	TrackerSystemSettingFile settingFile;
+	TrackerSystemSettingBool settingBool;
+	TrackerSystemSettingIp settingIp;
+
+	TrackerSystemSettingType settingtype;
+} TrackerSystemSetting;
+
+typedef struct TrackerSystem
+{
+	char id[MAX_NUM_CHARS_IN_TRACKERSYSTEM];
+	bool active; //default = false;
+	TrackerSystemSetting trackerSystemSettings[MAX_NUM_SETTINGS_IN_TRACKERS];
+	uint32_t currentSettingsCount; //default = 0;
+} TrackerSystem;
 
 // ------------------------------------------------------------------------------------------------------------------------------
 // end of Tracking
@@ -1091,7 +1185,11 @@ typedef struct DongleLandscapeData
 	uint32_t licenseMaxNumberOfGlovePairs;
 
 	uint32_t netDeviceID;
-	
+
+	char licenseName[MAX_NUM_CHARS_IN_LICENSE_TYPE]; // display-only tier label (e.g. "Robotics")
+	LicenseTermType licenseTermType; // Recurring / Perpetual (V3); Unknown for V2
+	LicenseStatus licenseStatus; // why the license is (not) usable on the reporting Core build
+
 } DongleLandscapeData;
 
 /// @brief Stores all the received glove data.
@@ -1123,17 +1221,6 @@ typedef struct GloveLandscapeData
 	uint32_t netDeviceID;
 } GloveLandscapeData;
 
-/// @brief Stores informations regarding the lengths of different parts of the body.
-typedef struct Measurement
-{
-	MeasurementType	entryType; //default = MeasurementType::MeasurementType_Unknown;
-	float value; //default = 0.0f;
-
-	MeasurementUnit unit; //default = MeasurementUnit_Meters;
-	MeasurementCategory category; //default = MeasurementCategory_Misc;
-	char displayName[MAX_NUM_CHARS_IN_MEASUREMENT];
-} Measurement;
-
 /// @brief Stores the local offsets to the trackers.
 typedef struct TrackerOffset
 {
@@ -1141,13 +1228,6 @@ typedef struct TrackerOffset
 	ManusVec3 translation;
 	ManusQuaternion rotation;
 } TrackerOffset;
-
-/// @brief Stores possible extra offsets to the trackers.
-typedef struct ExtraTrackerOffset
-{
-	ExtraTrackerOffsetType entryType; //default = ExtraTrackerOffsetType::ExtraTrackerOffsetType_Unknown;
-	float value; //default = 0.0f;
-} ExtraTrackerOffset;
 
 /// @brief Stores all the received tracker data.
 typedef struct TrackerLandscapeData
@@ -1159,15 +1239,13 @@ typedef struct TrackerLandscapeData
 	bool isHMD; //default = false;
 	char manufacturer[MAX_NUM_CHARS_IN_TRACKER_MANUFACTURER]; // default = "Unknown"
 	char productName[MAX_NUM_CHARS_IN_TRACKER_PRODUCTNAME]; // default = "Unknown"
+	TrackedPoint trackedPoint;
 } TrackerLandscapeData;
 
 /// @brief Stores all the received user profile data.
 typedef struct UserProfileLandscapeData
 {
-	ProfileType profileType; //default = ProfileType::ProfileType_Hands;
-	Measurement measurements[MeasurementType_MAX_SIZE];
 	TrackerOffset trackerOffsets[TrackerOffsetType_MAX_SIZE];
-	ExtraTrackerOffset extraTrackerOffsets[ExtraTrackerOffsetType_MAX_SIZE];
 	ManusTimestamp leftGloveCalibrationTimestamp;
 	ManusTimestamp rightGloveCalibrationTimestamp;
 } UserProfileLandscapeData;
@@ -1252,6 +1330,9 @@ typedef struct LicenseInfo
 	bool worldVizSession; //default = false;
 	bool noraxonSession; //default = false;
 	bool noitomSession; //default = false;
+	bool abletonSession; //default = false;
+	bool linuxTarget; //default = false;
+	uint32_t netSeats; //default = 0; NSeat: concurrent networked clients this license may serve (a parsed license without the field gets 1)
 } LicenseInfo;
 
 /// @brief Stores the landscape settings.
@@ -1280,13 +1361,15 @@ typedef struct TimeLandscape
 	TimecodeInterface interfaces[MAX_NUMBER_OF_AUDIO_INTERFACES];
 	uint32_t interfaceCount; //default = 0;
 	TimecodeInterface currentInterface;
-	TimecodeFPS fps; //default = Undefined;
+	TimecodeFPS fps; //default = TimecodeFPS::TimecodeFPS_Undefined;
 	bool fakeTimecode; //default = false;
 	bool useSyncPulse; //default = false;
 	bool deviceKeepAlive; //default = false;
 	bool syncStatus; //default = false;
-	bool timecodeStatus; //default = false;
+	bool timecodeStatus; //default = false; true while there is timecode: locked, acquiring or freewheeling
 	int32_t ltcChannel; //default = -1;
+	TimecodeClockState clockState; //default = NoSignal;
+	float freewheelSeconds; //default = 0; how long the clock has been freewheeling
 } TimeLandscape;
 
 /// @brief Contains information about a gesture
@@ -1302,6 +1385,10 @@ typedef struct NetDeviceLandscapeData
 	uint32_t netDeviceID;
 	char hostname[MAX_NUM_CHARS_IN_HOST_NAME];
 	char ip[MAX_NUM_CHARS_IN_IP_ADDRESS];
+
+	NetSeatState netSeatState;	// why we do/don't have this host's license
+	uint32_t netSeatsTotal;		// 0 when the host is unlicensed or its license has no seats
+	uint32_t netSeatsUsed;		// includes reconnect grace holds
 } NetDeviceLandscapeData;
 
 /// @brief Contains information about a single net device
@@ -1309,7 +1396,7 @@ typedef struct NetDevicesLandscape
 {
 	uint32_t numberOfNetDevices; // default = 0;
 	NetDeviceLandscapeData netDevices[MAX_NUMBER_OF_NETDEVICES];
-} NetDeviceLandscape;
+} NetDevicesLandscape;
 
 /// @brief Stores the landscape data.
 typedef struct Landscape
@@ -1442,7 +1529,7 @@ typedef struct ChainSettingsShoulder
 typedef struct ChainSettingsFinger
 {
 	bool useLeafAtEnd; //default = false;
-	int32_t metacarpalBoneId; //default = 0;
+	int32_t metacarpalBoneId; //default = -1;
 	int32_t handChainId; //default = 0;
 	float fingerWidth; //default = 0;
 } ChainSettingsFinger;
@@ -1569,7 +1656,7 @@ typedef struct SkeletonTargetUserIndexData
 /// @brief Stores the information regarding the animation data used to animate the skeleton.
 typedef struct SkeletonTargetAnimationData
 {
-	char id[MAX_NUM_CHARS_IN_TARGET_ID];
+	char id[MAX_NUM_CHARS_IN_TARGET_ID]; // this is for a UTF8 string , NOT an ASCII CHAR array (same base type though)
 } SkeletonTargetAnimationData;
 
 /// @brief Stores the information regarding the glove data used to animate the skeleton.
@@ -1724,10 +1811,10 @@ typedef struct CoordinateSystemDirection
 // ------------------------------------------------------------------------------------------------------------------------------
 
 /// @brief ONLY USED INTERNALLY
-/// @brief Stores orientation of trackers for polygon.
+/// @brief Stores the orientation of a tracker as found by the calibration sequence.
 typedef struct TrackerDirection
 {
-	TrackerOffsetType type; //default = TrackerOffsetType::TOT_Unknown;
+	TrackerOffsetType type; //default = TrackerOffsetType::TrackerOffsetType_Unknown;
 	ManusVec3 side;
 	ManusVec3 up;
 	ManusVec3 forward;
@@ -1739,7 +1826,6 @@ typedef struct CalibrationProfile
 {
 	TrackerOffset trackerOffsets[TrackerOffsetType_MAX_SIZE];
 	TrackerDirection trackerDirections[TrackerOffsetType_MAX_SIZE];
-	Measurement measurements[MeasurementType_MAX_SIZE];
 }CalibrationProfile;
 
 // ------------------------------------------------------------------------------------------------------------------------------
